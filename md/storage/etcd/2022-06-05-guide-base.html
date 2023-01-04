@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>入门篇：etcd的安装部署和使用姿势 | 李三十一的个人网站</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c03de854d3cd39bfe134ce906d614b82";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="李三十一的个人网站，致力于分享和提炼编程技术，让优质丰富的技术信息得到全面可靠的共享，促使信息创造价值。">
+    <meta property="article:modified_time" content="2023-01-04T05:43:08.000Z">
+    <meta property="og:title" content="入门篇：etcd的安装部署和使用姿势">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/storage/etcd/2022-06-05-guide-base.html">
+    <meta name="twitter:title" content="入门篇：etcd的安装部署和使用姿势">
+    <meta name="twitter:url" content="/md/storage/etcd/2022-06-05-guide-base.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="李三十一">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="李三十一，李三十一的个人网站，LiSanShiYi，Python，分布式，数据库，云原生，大数据，算法">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ba139ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1672811081832" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-110.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1672811081832" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ba139ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1672811081832">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">李三十一的个人网站</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/about/platform/guide2reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="语言基础" class="dropdown-title"><span class="title">语言基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/language/python/default.html" class="nav-link">
+  Python
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="网络技术" class="dropdown-title"><span class="title">网络技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/network/grpc/default.html" class="nav-link">
+  gRPC
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="存储技术" class="dropdown-title"><span class="title">存储技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/storage/etcd/default.html" class="nav-link">
+  etcd
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="源码解析" class="dropdown-title"><span class="title">源码解析</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/sourcecode/requests/default.html" class="nav-link">
+  Requests
+</a></li><li class="dropdown-item"><!----> <a href="/md/sourcecode/urllib3/default.html" class="nav-link">
+  urllib3
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="其他日常" class="dropdown-title"><span class="title">其他日常</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/other/tools/default.html" class="nav-link">
+  工具推荐
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/issues/default.html" class="nav-link">
+  问题解答
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/notes/default.html" class="nav-link">
+  随笔日记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/default.html" class="nav-link">
+  关于站长
+</a></li><li class="dropdown-item"><!----> <a href="https://github.com/liyaodev" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/md/about/platform/default.html" class="nav-link">
+  关于小站
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/about/platform/guide2reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="语言基础" class="dropdown-title"><span class="title">语言基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/language/python/default.html" class="nav-link">
+  Python
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="网络技术" class="dropdown-title"><span class="title">网络技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/network/grpc/default.html" class="nav-link">
+  gRPC
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="存储技术" class="dropdown-title"><span class="title">存储技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/storage/etcd/default.html" class="nav-link">
+  etcd
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="源码解析" class="dropdown-title"><span class="title">源码解析</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/sourcecode/requests/default.html" class="nav-link">
+  Requests
+</a></li><li class="dropdown-item"><!----> <a href="/md/sourcecode/urllib3/default.html" class="nav-link">
+  urllib3
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="其他日常" class="dropdown-title"><span class="title">其他日常</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/other/tools/default.html" class="nav-link">
+  工具推荐
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/issues/default.html" class="nav-link">
+  问题解答
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/notes/default.html" class="nav-link">
+  随笔日记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/default.html" class="nav-link">
+  关于站长
+</a></li><li class="dropdown-item"><!----> <a href="https://github.com/liyaodev" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/md/about/platform/default.html" class="nav-link">
+  关于小站
+</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>etcd</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/storage/etcd/2022-04-18-guide-distributed-lock.html" class="sidebar-link">基础篇：etcd 3.0 实现分布式锁</a></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html" aria-current="page" class="active sidebar-link">入门篇：etcd的安装部署和使用姿势</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><p>大家好，我是<code>三十一</code><sup>[0]</sup>，本次分享分布式神器<code>etcd</code><sup>[1]</sup>的 5 种部署方式和 10 种使用姿势，阅读全文预计花费 16 分钟。如果对你有帮助，也欢迎号友们点赞收藏。</p> <p>在学习 etcd 之前，我们先来聊一聊 <code>etcd 名字的由来</code><sup>[2]</sup>。etcd 中的 etc 取自 unix 系统的<code>/etc</code>目录，再加上一个<code>d</code>代表<code>distributed system</code>就组成了 etcd。在 unix 系统中 /etc 目录用于存储系统的配置数据，单从名字看 etcd 可用于存储分布式系统的配置数据，有时候也把 etcd 简单理解为分布式 /etc 配置目录。</p> <h2 id="etcd-简介"><a href="#etcd-简介" class="header-anchor">#</a> etcd 简介</h2> <p>etcd 是一个可靠的分布式 key-value 存储系统，主要用于<code>配置共享</code>和<code>服务注册和发现</code>，具有以下特性：</p> <ul><li>简单：基于 gRPC 定义了清晰、面向用户的 API。</li> <li>安全：支持可选的客户端 TLS 证书自动认证特性。</li> <li>快速：支持每秒 10000 次的写入。</li> <li>可靠：基于 Raft 算法协议保证一致性。</li></ul> <p>etcd 使用 Go 语言开发，底层基于 Raft 共识算法管理高可用的复制日志。当前已经被许多公司用于关键生产项目，比如：Kubernetes、locksmith、vulcand、Doorman 等。</p> <p>当然，也有其他组件可以提供配置共享和服务注册和发现的功能，比如最为广泛和大家最为熟知的 Zookeeper，也被很多 Java 系的知名开源项目认可和使用，比如：Hadoop、HBase、Kafka 等。</p> <p>但 etcd 是唯一一个可以媲美甚至超越 Zookeeper 的组件。</p> <p>相较之下，Zookeeper 有如下缺点[3]：</p> <ul><li>复杂：Zookeeper 基于 ZAB 协议，属于类 Paxos 协议，而 Paxos 算法素以复杂难懂闻名；Zookeeper 的使用也比较复杂，需要安装客户端，而官方目前只提供了 Java 和 C 两种语言接口。</li> <li>发展慢：由于基金会庞大的结构以及松散的管理，导致项目发展缓慢。</li></ul> <p>而 etcd 作为后起之秀，其优点也很明显：</p> <ul><li>简单：使用 Go 语言编写部署简单；使用 gRPC 定义接口，支持跨语言、跨平台特性；使用了易于用户理解的 Raft 算法保证一致性，优于 Paxos 算法。</li> <li>发展快：etcd 正处于高速迭代开发中。</li> <li>性能优越：官方提供的基准测试数据中，etcd 集群可以支持每秒 10000+ 次的写入，性能优于 Zookeeper。</li> <li>安全性：etcd 支持 TLS 访问，而 ZooKeeper 在权限控制方面做得略显粗糙。</li></ul> <h2 id="环境搭建"><a href="#环境搭建" class="header-anchor">#</a> 环境搭建</h2> <h3 id="一、本地安装包部署"><a href="#一、本地安装包部署" class="header-anchor">#</a> 一、本地安装包部署</h3> <p><strong>下载</strong>：下载最新的安装包（当前最新：v3.5.4），下载地址：https://github.com/etcd-io/etcd/releases/</p> <p><img alt="" data-src="https://lisanshiyi.com/assets/network/grpc/grpc-02.png" loading="lazy" class="lazy"></p> <p><strong>安装</strong>：在解压后的文件目录下<code>etcd</code>、<code>etcdctl</code>分别为安装包和客户端的编译后的执行文件，可使用三种方法进行运行配置。</p> <ul><li>方法一：解压目录下直接运行</li> <li>方法二：把<code>etcd</code>、<code>etcdctl</code>文件复制到<code>GOBIN</code>目录下。</li> <li>方法三：在环境变量里添加<code>etcd</code>、<code>etcdctl</code>文件所在的目录。</li></ul> <p>注：运行过程中，可能会涉及权限问题，授权即可。</p> <p><strong>验证</strong>：</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 验证 etcd 版本</span>
+$ etcd <span class="token parameter variable">--version</span>
+
+etcd Version: <span class="token number">3.5</span>.4
+Git SHA: 08407ff76
+Go Version: go1.16.15
+Go OS/Arch: darwin/amd64
+
+<span class="token comment"># 验证 etcdctl 版本</span>
+$ etcdctl version
+
+etcdctl version: <span class="token number">3.5</span>.4
+API version: <span class="token number">3.5</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><h3 id="二、本地编译部署"><a href="#二、本地编译部署" class="header-anchor">#</a> 二、本地编译部署</h3> <p><strong>下载</strong>：使用以下命令克隆代码</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 下载最新版</span>
+$ <span class="token function">git</span> clone https://github.com/etcd-io/etcd.git
+<span class="token comment"># 指定版本下载</span>
+$ <span class="token function">git</span> clone <span class="token parameter variable">-b</span> v3.5.4 https://github.com/etcd-io/etcd.git
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p><strong>编译安装</strong>：</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 编译</span>
+$ <span class="token builtin class-name">cd</span> etcd
+$ <span class="token function">make</span> build
+
+<span class="token comment"># 安装</span>
+$ <span class="token builtin class-name">export</span> <span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span><span class="token string">&quot;<span class="token environment constant">$PATH</span>:<span class="token variable"><span class="token variable">`</span><span class="token builtin class-name">pwd</span><span class="token variable">`</span></span>/bin&quot;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p><strong>验证</strong>：</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 验证 etcd 版本</span>
+$ etcd <span class="token parameter variable">--version</span>
+
+<span class="token comment"># 验证 etcdctl 版本</span>
+$ etcdctl version
+
+<span class="token comment"># 验证 etcdutl 版本</span>
+$ etcdutl version
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h3 id="三、本地集群部署"><a href="#三、本地集群部署" class="header-anchor">#</a> 三、本地集群部署</h3> <p>首先需要安装<code>goreman</code>组件，它基于 Procfile 配置文件管理 etcd 应用进程。</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ go <span class="token function">install</span> github.com/mattn/goreman@latest
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>启动集群</strong>：源码目录下<code>Procfile</code>脚本已经构建好了本地演示集群，直接运行启动即可</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ goreman start
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>验证</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl member list
+
+8211f1d0f64f3269, started, infra1, http://127.0.0.1:12380, http://127.0.0.1:2379, <span class="token boolean">false</span>
+91bc3c398fb3c146, started, infra2, http://127.0.0.1:22380, http://127.0.0.1:22379, <span class="token boolean">false</span>
+fd422379fda50e48, started, infra3, http://127.0.0.1:32380, http://127.0.0.1:32379, <span class="token boolean">false</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>该脚本创建包含 3 个 etcd 成员节点的集群，每个集群成员都接收键值的读取和写入。也可以按照<code>Procfile.learner</code>脚本指导，学习集群新增节点的操作。</p> <h3 id="四、docker-单机部署"><a href="#四、docker-单机部署" class="header-anchor">#</a> 四、Docker 单机部署</h3> <p>此处通过<code>docker-compose</code>进行实验配置。</p> <p><strong>镜像拉取</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ <span class="token function">docker</span> pull bitnami/etcd:3.5.2
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>编辑docker-compose.yml</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>version: <span class="token string">'3.5'</span>
+
+services:
+  etcd:
+    container_name: builder-etcd
+    image: bitnami/etcd:3.5.2
+    ports:
+      - <span class="token number">2379</span>:2379
+    environment:
+      - <span class="token assign-left variable">ALLOW_NONE_AUTHENTICATION</span><span class="token operator">=</span>yes
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_MODE</span><span class="token operator">=</span>revision
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_RETENTION</span><span class="token operator">=</span><span class="token number">1002</span>
+      - <span class="token assign-left variable">ETCD_QUOTA_BACKEND_BYTES</span><span class="token operator">=</span><span class="token number">4294967296</span>
+    volumes:
+      - <span class="token variable">${DOCKER_ROOT_DIR<span class="token operator">:-</span>.}</span>/volumes/etcd/data:/bitnami/etcd
+
+networks:
+  default:
+    name: builder_dev
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br></div></div><p><strong>启动服务</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ <span class="token function">docker-compose</span> <span class="token parameter variable">-f</span> docker-compose.yml up
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>验证</strong>：验证集群节点的版本</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> builder-etcd /bin/bash <span class="token parameter variable">-c</span> <span class="token string">&quot;etcd --version&quot;</span>
+
+etcd Version: <span class="token number">3.5</span>.2
+Git SHA: 99018a77b
+Go Version: go1.16.3
+Go OS/Arch: linux/amd64
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h3 id="五、docker-集群部署"><a href="#五、docker-集群部署" class="header-anchor">#</a> 五、Docker 集群部署</h3> <p><strong>编辑docker-compose.yml</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>version: <span class="token string">'3.5'</span>
+
+services:
+  etcd1:
+    container_name: builder-etcd1
+    image: bitnami/etcd:3.5.2
+    ports:
+      - <span class="token number">12379</span>:2379
+    environment:
+      - <span class="token assign-left variable">ALLOW_NONE_AUTHENTICATION</span><span class="token operator">=</span>yes
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_MODE</span><span class="token operator">=</span>revision
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_RETENTION</span><span class="token operator">=</span><span class="token number">1002</span>
+      - <span class="token assign-left variable">ETCD_QUOTA_BACKEND_BYTES</span><span class="token operator">=</span><span class="token number">4294967296</span>
+      - <span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd1
+      - <span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span>http://etcd1:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span>http://0.0.0.0:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span>http://0.0.0.0:2379
+      - <span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span>http://etcd1:2379
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span>etcd-cluster
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span>etcd1<span class="token operator">=</span>http://etcd1:2380,etcd2<span class="token operator">=</span>http://etcd2:2380,etcd3<span class="token operator">=</span>http://etcd3:2380
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span>new
+    volumes:
+      - <span class="token variable">${DOCKER_ROOT_DIR<span class="token operator">:-</span>.}</span>/volumes/etcd/data1:/bitnami/etcd
+
+  etcd2:
+    container_name: builder-etcd2
+    image: bitnami/etcd:3.5.2
+    ports:
+      - <span class="token number">22379</span>:2379
+    environment:
+      - <span class="token assign-left variable">ALLOW_NONE_AUTHENTICATION</span><span class="token operator">=</span>yes
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_MODE</span><span class="token operator">=</span>revision
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_RETENTION</span><span class="token operator">=</span><span class="token number">1002</span>
+      - <span class="token assign-left variable">ETCD_QUOTA_BACKEND_BYTES</span><span class="token operator">=</span><span class="token number">4294967296</span>
+      - <span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd2
+      - <span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span>http://etcd2:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span>http://0.0.0.0:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span>http://0.0.0.0:2379
+      - <span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span>http://etcd2:2379
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span>etcd-cluster
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span>etcd1<span class="token operator">=</span>http://etcd1:2380,etcd2<span class="token operator">=</span>http://etcd2:2380,etcd3<span class="token operator">=</span>http://etcd3:2380
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span>new
+    volumes:
+      - <span class="token variable">${DOCKER_ROOT_DIR<span class="token operator">:-</span>.}</span>/volumes/etcd/data2:/bitnami/etcd
+
+  etcd3:
+    container_name: builder-etcd3
+    image: bitnami/etcd:3.5.2
+    ports:
+      - <span class="token number">32379</span>:2379
+    environment:
+      - <span class="token assign-left variable">ALLOW_NONE_AUTHENTICATION</span><span class="token operator">=</span>yes
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_MODE</span><span class="token operator">=</span>revision
+      - <span class="token assign-left variable">ETCD_AUTO_COMPACTION_RETENTION</span><span class="token operator">=</span><span class="token number">1002</span>
+      - <span class="token assign-left variable">ETCD_QUOTA_BACKEND_BYTES</span><span class="token operator">=</span><span class="token number">4294967296</span>
+      - <span class="token assign-left variable">ETCD_NAME</span><span class="token operator">=</span>etcd3
+      - <span class="token assign-left variable">ETCD_INITIAL_ADVERTISE_PEER_URLS</span><span class="token operator">=</span>http://etcd3:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_PEER_URLS</span><span class="token operator">=</span>http://0.0.0.0:2380
+      - <span class="token assign-left variable">ETCD_LISTEN_CLIENT_URLS</span><span class="token operator">=</span>http://0.0.0.0:2379
+      - <span class="token assign-left variable">ETCD_ADVERTISE_CLIENT_URLS</span><span class="token operator">=</span>http://etcd3:2379
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_TOKEN</span><span class="token operator">=</span>etcd-cluster
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER</span><span class="token operator">=</span>etcd1<span class="token operator">=</span>http://etcd1:2380,etcd2<span class="token operator">=</span>http://etcd2:2380,etcd3<span class="token operator">=</span>http://etcd3:2380
+      - <span class="token assign-left variable">ETCD_INITIAL_CLUSTER_STATE</span><span class="token operator">=</span>new
+    volumes:
+      - <span class="token variable">${DOCKER_ROOT_DIR<span class="token operator">:-</span>.}</span>/volumes/etcd/data3:/bitnami/etcd
+
+networks:
+  default:
+    name: builder_dev
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br></div></div><p>部署配置文件 docker-compose.yml 细节，详见<code>etcd docker-compose yml</code><sup>[4]</sup></p> <p><strong>启动服务</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ <span class="token function">docker-compose</span> <span class="token parameter variable">-f</span> docker-compose.yml up
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p><strong>验证</strong>：验证集群节点的版本</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> builder-etcd1 /bin/bash <span class="token parameter variable">-c</span> <span class="token string">&quot;etcd --version&quot;</span>
+$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> builder-etcd2 /bin/bash <span class="token parameter variable">-c</span> <span class="token string">&quot;etcd --version&quot;</span>
+$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> builder-etcd3 /bin/bash <span class="token parameter variable">-c</span> <span class="token string">&quot;etcd --version&quot;</span>
+
+<span class="token comment"># 输出</span>
+etcd Version: <span class="token number">3.5</span>.2
+Git SHA: 99018a77b
+Go Version: go1.16.3
+Go OS/Arch: linux/amd64
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><h2 id="api-学习"><a href="#api-学习" class="header-anchor">#</a> API 学习</h2> <p>此处，通过使用<code>etcdctl</code><sup>[5]</sup>进行 API 学习验证，etcdctl 是一个用于与 etcd 服务器交互的命令行工具。</p> <p><strong>1.查看版本</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl version
+
+etcdctl version: <span class="token number">3.6</span>.0-alpha.0
+API version: <span class="token number">3.6</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p><strong>2.写入 key</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl put foo bar
+OK
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p><strong>3.读取 key</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl get foo
+foo
+bar
+<span class="token comment"># 只是获取值</span>
+$ etcdctl get foo --print-value-only
+bar
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><p><strong>4.批量取值</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl put foo1 bar1
+$ etcdctl put foo3 bar2
+$ etcdctl put foo3 bar3
+
+<span class="token comment"># 获取从 foo 到 foo3 的值，不包括 foo3</span>
+$ etcdctl get foo foo3 --print-value-only 
+bar
+bar1
+bar2
+
+<span class="token comment"># 获取前缀为 foo 的值</span>
+$ etcdctl get <span class="token parameter variable">--prefix</span> foo --print-value-only
+bar
+bar1
+bar2
+bar3
+
+<span class="token comment"># 获取符合前缀的前两个值</span>
+$ etcdctl get <span class="token parameter variable">--prefix</span> <span class="token parameter variable">--limit</span><span class="token operator">=</span><span class="token number">2</span> foo --print-value-only
+bar
+bar1
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><p><strong>5.删除 key</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 删除 foo 的值</span>
+$ etcdctl del foo
+<span class="token number">1</span>
+
+<span class="token comment"># 删除 foo 到 foo2 且不包括 foo2 的值</span>
+$ etcdctl del foo foo2
+<span class="token number">1</span>
+<span class="token comment"># 删除前缀为 foo 的所有值</span>
+$ etcdctl del <span class="token parameter variable">--prefix</span> foo
+<span class="token number">2</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><p><strong>6.监听</strong></p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 监听 foo 单个 key</span>
+$ etcdctl <span class="token function">watch</span> foo
+<span class="token comment"># 另一个控制台执行： etcdctl put foo bar</span>
+PUT
+foo
+bar
+
+<span class="token comment"># 同时监视多个值</span>
+$ etcdctl <span class="token function">watch</span> <span class="token parameter variable">-i</span>
+$ <span class="token function">watch</span> foo
+$ <span class="token function">watch</span> zoo
+<span class="token comment"># 另一个控制台执行: etcdctl put foo bar</span>
+PUT
+foo
+bar
+
+<span class="token comment"># 另一个控制台执行: etcdctl put zoo val</span>
+PUT
+zoo
+val
+
+<span class="token comment"># 监视 foo 前缀命中的 key</span>
+$ etcdctl <span class="token function">watch</span> <span class="token parameter variable">--prefix</span> foo
+<span class="token comment"># 另一个控制台执行： etcdctl put foo1 bar1</span>
+PUT
+foo1
+bar1
+<span class="token comment"># 另一个控制台执行： etcdctl put fooz1 barz1</span>
+PUT
+fooz1
+barz1
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br></div></div><p><strong>7.设置租约</strong>
+当一个 key 被绑定到一个租约上时，它的生命周期与租约的生命周期即绑定。</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 设置10秒后过期时间</span>
+$ etcdctl lease grant <span class="token number">10</span>
+lease 32698142c52a170a granted with TTL<span class="token punctuation">(</span>10s<span class="token punctuation">)</span>
+
+<span class="token comment"># 把 foo 和租约绑定，设置成 10 秒后过期</span>
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a170a foo bar
+OK
+$ etcdctl get foo
+foo
+bar
+
+<span class="token comment"># 10 秒后，获取不到 foo</span>
+$ etcdctl get foo
+<span class="token comment"># 返回空</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><p><strong>8.撤销租约</strong>
+通过租约 ID 撤销租约，撤销租约将删除其所有绑定的 key。</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl lease grant <span class="token number">10</span>
+lease 32698142c52a170c granted with TTL<span class="token punctuation">(</span>10s<span class="token punctuation">)</span>
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a170c foo bar
+OK
+
+<span class="token comment"># 撤销租约</span>
+$ etcdctl lease revoke 32698142c52a170c
+lease 32698142c52a170c revoked
+
+$ etcdctl get foo
+<span class="token comment"># 返回空</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p><strong>9.续约</strong>
+通过刷新 TTL 值来保持租约的有效，使其不会过期。</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 设置 10 秒后过期租约</span>
+$ etcdctl lease grant <span class="token number">10</span>
+lease 32698142c52a170f granted with TTL<span class="token punctuation">(</span>10s<span class="token punctuation">)</span>
+
+<span class="token comment"># 把 foo 和租约绑定，设置成 10 秒后过期</span>
+$ etcdctl put foo bar <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a170f
+
+<span class="token comment"># 自动定时执行续约，续约成功后每次租约为 10 秒</span>
+$ etcdctl lease keep-alive 32698142c52a170f
+lease 32695410dcc0ca06 keepalived with TTL<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+lease 32695410dcc0ca06 keepalived with TTL<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+lease 32695410dcc0ca06 keepalived with TTL<span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token punctuation">..</span>.
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><p><strong>10.查看租约</strong>
+查看租约信息，以便续租或查看租约是否仍然存在或已过期</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 设置 50 秒 TTL</span>
+$ etcdctl lease grant <span class="token number">50</span>
+lease 32698142c52a1711 granted with TTL<span class="token punctuation">(</span>50s<span class="token punctuation">)</span>
+
+<span class="token comment"># zoo1 绑定 32698142c52a1711 租约</span>
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1711 zoo1 val1
+OK
+
+<span class="token comment"># 查看租约，remaining(32s) 剩余有效时间32秒；--keys 获取租约绑定的 key</span>
+$ etcdctl lease timetolive <span class="token parameter variable">--keys</span> 32698142c52a1711
+lease 32698142c52a1711 granted with TTL<span class="token punctuation">(</span>50s<span class="token punctuation">)</span>, remaining<span class="token punctuation">(</span>32s<span class="token punctuation">)</span>, attached keys<span class="token punctuation">(</span><span class="token punctuation">[</span>zoo1<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>注：一个租约支持绑定多个 key</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>$ etcdctl lease grant <span class="token number">50</span>
+lease 32698142c52a1713 granted with TTL<span class="token punctuation">(</span>50s<span class="token punctuation">)</span>
+
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1713 zoo1 val1
+OK
+
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1713 zoo2 val2
+OK
+
+$ etcdctl put <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1713 zoo3 val3
+OK
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>租约过期后，所有 key 值都会被删除，因此：</p> <ul><li>当租约只绑定了一个 key 时，想删除这个 key，最好的办法是撤销它的租约，而不是直接删除这个 key。</li> <li>当租约没有绑定key时，应主动把它撤销掉，单纯删除 key 后，续约操作持续进行，会造成内存泄露。</li></ul> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code><span class="token comment"># 方法一：直接删除`key`</span>
+<span class="token comment"># 设置租约并绑定 zoo1</span>
+$ etcdctl lease grant <span class="token number">50</span>
+lease 32698142c52a1715 granted with TTL<span class="token punctuation">(</span>50s<span class="token punctuation">)</span>
+$ etcdctl <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1715 put zoo1 val1
+OK
+
+<span class="token comment"># 续约</span>
+$ etcdctl lease keep-alive 32698142c52a1715
+lease 32698142c52a1715 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 另一个控制台执行：etcdctl del zoo1</span>
+<span class="token comment"># 单纯删除 key 后，续约操作持续进行，会造成内存泄露</span>
+lease 32698142c52a1715 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+lease 32698142c52a1715 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+lease 32698142c52a1715 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+<span class="token punctuation">..</span>.
+
+<span class="token comment"># 方法二：撤销`key`的租约</span>
+<span class="token comment"># 设置租约并绑定 zoo1</span>
+$ etcdctl lease grant <span class="token number">50</span>
+lease 32698142c52a1717 granted with TTL<span class="token punctuation">(</span>50s<span class="token punctuation">)</span>
+$ etcdctl <span class="token parameter variable">--lease</span><span class="token operator">=</span>32698142c52a1717 put zoo1 val1
+OK
+
+<span class="token comment"># 续约</span>
+$ etcdctl lease keep-alive 32698142c52a1717
+lease 32698142c52a1717 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+lease 32698142c52a1717 keepalived with TTL<span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+
+<span class="token comment"># 另一个控制台执行：etcdctl lease revoke 32698142c52a1717</span>
+
+<span class="token comment"># 续约撤销并退出</span>
+lease 32698142c52a1717 expired or revoked.
+$ etcdctl get zoo1
+<span class="token comment"># 返回空</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br></div></div><p>以上，就是今天的全部内容，几乎包含了 etcd 安装和使用的各种姿势，欢迎各位号友敬请尝试。</p> <h2 id="references"><a href="#references" class="header-anchor">#</a> References</h2> <ul><li>[0] 三十一: https://www.lisanshiyi.com/assets/image/ThirtyOneLee.jpeg</li> <li>[1] etcd: https://github.com/etcd-io/etcd</li> <li>[2] etcd 名字的由来: https://etcd.io/docs/v3.5/faq/</li> <li>[3] https://www.infoq.cn/article/etcd-interpretation-application-scenario-implement-principle/</li> <li>[4] etcd docker-compose yml: https://github.com/liyaodev/docker-compose</li> <li>[5] etcdctl: https://etcd.io/docs/v3.5/dev-guide/interacting_v3/</li></ul></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/liyaodev/lisanshiyi/edit/master/docs/md/storage/etcd/2022-06-05-guide-base.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/1/4</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/storage/etcd/2022-04-18-guide-distributed-lock.html" class="prev">
+          基础篇：etcd 3.0 实现分布式锁
+        </a></span> <!----></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">入门篇：etcd的安装部署和使用姿势</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#etcd-简介" class="toc-sidebar-link">etcd 简介</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#环境搭建" class="toc-sidebar-link">环境搭建</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#一、本地安装包部署" class="toc-sidebar-link">一、本地安装包部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#二、本地编译部署" class="toc-sidebar-link">二、本地编译部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#三、本地集群部署" class="toc-sidebar-link">三、本地集群部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#四、docker-单机部署" class="toc-sidebar-link">四、Docker 单机部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#五、docker-集群部署" class="toc-sidebar-link">五、Docker 集群部署</a></li></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#api-学习" class="toc-sidebar-link">API 学习</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#references" class="toc-sidebar-link">References</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">入门篇：etcd的安装部署和使用姿势</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#etcd-简介" class="toc-sidebar-link">etcd 简介</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#环境搭建" class="toc-sidebar-link">环境搭建</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#一、本地安装包部署" class="toc-sidebar-link">一、本地安装包部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#二、本地编译部署" class="toc-sidebar-link">二、本地编译部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#三、本地集群部署" class="toc-sidebar-link">三、本地集群部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#四、docker-单机部署" class="toc-sidebar-link">四、Docker 单机部署</a></li><li class="toc-sidebar-sub-header"><a href="/md/storage/etcd/2022-06-05-guide-base.html#五、docker-集群部署" class="toc-sidebar-link">五、Docker 集群部署</a></li></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#api-学习" class="toc-sidebar-link">API 学习</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/storage/etcd/2022-06-05-guide-base.html#references" class="toc-sidebar-link">References</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://lisanshiyi.com/md/storage/etcd/2022-06-05-guide-base.html" style="margin:10px;">
+              支持<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/likecode.jpeg" style="margin:5px;"></div></div></div></div> <div title="基础篇：etcd 3.0 实现分布式锁" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/storage/etcd/2022-04-18-guide-distributed-lock.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <!----></div>  <div class="page-side-sitemap"><div class="option-box"><img src="/images/system/sitemap.png" class="nozoom img"> <span class="show-txt">站点图</span> <div class="sitemap-container"><h4>站点导航图
+            <a href="/md/about/me/platform/default.html" class="sitemap-top-link"> 关于我</a> <a href="/md/about/platform/default.html" class="sitemap-top-link"> 关于平台</a></h4> <table class="sitemap-table"><tr><td nowrap="nowrap"><div class="sitemap-col-group">常用搜索</div></td> <td><div class="sitemap-col-item"><a href="http://www.baidu.com/" target="_blank" title="百度">  
+          百度
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.google.com/" target="_blank" title="Google">  
+          Google
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.bing.com/" target="_blank" title="Bing">  
+          Bing
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://github.com" target="_blank" title="Github">  
+          Github
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://gitee.com" target="_blank" title="Gitee">  
+          Gitee
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.programcreek.com/java-api-examples/index.php" target="_blank" title="搜代码">  
+          搜代码
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr><tr><td nowrap="nowrap"><div class="sitemap-col-group">技术社区</div></td> <td><div class="sitemap-col-item"><a href="http://www.csdn.net/" target="_blank" title="CDSN">  
+          CDSN
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.cnblogs.com/" target="_blank" title="博客园">  
+          博客园
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.oschina.net" target="_blank" title="OSChina">  
+          OSChina
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://segmentfault.com/" target="_blank" title="思否">  
+          思否
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://juejin.im" target="_blank" title="掘金">  
+          掘金
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.linuxidc.com/" target="_blank" title="Linux公社">  
+          Linux公社
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.ibm.com/developerworks/cn/" target="_blank" title="IBM 开发者">  
+          IBM 开发者
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://stackoverflow.com" target="_blank" title="StackOverflow">  
+          StackOverflow
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr><tr><td nowrap="nowrap"><div class="sitemap-col-group">知识星球</div></td> <td><div class="sitemap-col-item"><a href="https://t.zsxq.com/05IMnEQFY" target="_blank" title="编程清单">  
+          编程清单
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr></table></div></div></div> <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">李三十一</span> <br>发送：<span id="site-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/subcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1672811081832" defer></script><script src="/assets/js/cg-3.js?v=1672811081832" defer></script><script src="/assets/js/cg-4.js?v=1672811081832" defer></script><script src="/assets/js/cg-110.js?v=1672811081832" defer></script><script src="/assets/js/cg-5.js?v=1672811081832" defer></script><script src="/assets/js/cg-6.js?v=1672811081832" defer></script><script src="/assets/js/cg-app.js?v=1672811081832" defer></script>
+  </body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>GIL基础学习1 | 李三十一的个人网站</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/favicon.ico">
+    <script charset="utf-8" async="async" src="/js/jquery.min.js"></script>
+    <script charset="utf-8" async="async" src="/js/global.js"></script>
+    <script charset="utf-8" async="async" src="/js/fingerprint2.min.js"></script>
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c03de854d3cd39bfe134ce906d614b82";
+            var s = document.getElementsByTagName("script")[0]; 
+            s.parentNode.insertBefore(hm, s);
+            })();
+            </script>
+    <meta name="description" content="李三十一的个人网站，致力于分享和提炼编程技术，让优质丰富的技术信息得到全面可靠的共享，促使信息创造价值。">
+    <meta property="article:modified_time" content="2023-01-04T05:43:08.000Z">
+    <meta property="og:title" content="GIL基础学习1">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="/md/language/python/2021-03-03-base-gil-1.html">
+    <meta name="twitter:title" content="GIL基础学习1">
+    <meta name="twitter:url" content="/md/language/python/2021-03-03-base-gil-1.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="robots" content="all">
+    <meta name="author" content="李三十一">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="keywords" content="李三十一，李三十一的个人网站，LiSanShiYi，Python，分布式，数据库，云原生，大数据，算法">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <link rel="preload" href="/assets/css/0.styles.ba139ebb.css" as="style"><link rel="preload" href="/assets/css/styles.css?v=1672811081832" as="style"><link rel="preload" href="/assets/js/cg-styles.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-app.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-3.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-4.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-39.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-5.js?v=1672811081832" as="script"><link rel="preload" href="/assets/js/cg-6.js?v=1672811081832" as="script">
+    <link rel="stylesheet" href="/assets/css/0.styles.ba139ebb.css"><link rel="stylesheet" href="/assets/css/styles.css?v=1672811081832">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">李三十一的个人网站</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/md/about/platform/guide2reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="语言基础" class="dropdown-title"><span class="title">语言基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/language/python/default.html" class="nav-link">
+  Python
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="网络技术" class="dropdown-title"><span class="title">网络技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/network/grpc/default.html" class="nav-link">
+  gRPC
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="存储技术" class="dropdown-title"><span class="title">存储技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/storage/etcd/default.html" class="nav-link">
+  etcd
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="源码解析" class="dropdown-title"><span class="title">源码解析</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/sourcecode/requests/default.html" class="nav-link">
+  Requests
+</a></li><li class="dropdown-item"><!----> <a href="/md/sourcecode/urllib3/default.html" class="nav-link">
+  urllib3
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="其他日常" class="dropdown-title"><span class="title">其他日常</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/other/tools/default.html" class="nav-link">
+  工具推荐
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/issues/default.html" class="nav-link">
+  问题解答
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/notes/default.html" class="nav-link">
+  随笔日记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/default.html" class="nav-link">
+  关于站长
+</a></li><li class="dropdown-item"><!----> <a href="https://github.com/liyaodev" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/md/about/platform/default.html" class="nav-link">
+  关于小站
+</a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/md/about/platform/guide2reading.html" class="nav-link">
+  导读
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="语言基础" class="dropdown-title"><span class="title">语言基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/language/python/default.html" class="nav-link">
+  Python
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="网络技术" class="dropdown-title"><span class="title">网络技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/network/grpc/default.html" class="nav-link">
+  gRPC
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="存储技术" class="dropdown-title"><span class="title">存储技术</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/storage/etcd/default.html" class="nav-link">
+  etcd
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="源码解析" class="dropdown-title"><span class="title">源码解析</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/sourcecode/requests/default.html" class="nav-link">
+  Requests
+</a></li><li class="dropdown-item"><!----> <a href="/md/sourcecode/urllib3/default.html" class="nav-link">
+  urllib3
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="其他日常" class="dropdown-title"><span class="title">其他日常</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/other/tools/default.html" class="nav-link">
+  工具推荐
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/issues/default.html" class="nav-link">
+  问题解答
+</a></li><li class="dropdown-item"><!----> <a href="/md/other/notes/default.html" class="nav-link">
+  随笔日记
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="关于" class="dropdown-title"><span class="title">关于</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/md/about/me/default.html" class="nav-link">
+  关于站长
+</a></li><li class="dropdown-item"><!----> <a href="https://github.com/liyaodev" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/md/about/platform/default.html" class="nav-link">
+  关于小站
+</a></li></ul></div></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Python</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/md/language/python/2021-03-30-base-signal-2.html" class="sidebar-link">Signal信号量源码解析</a></li><li><a href="/md/language/python/2021-03-02-plugin-technology.html" class="sidebar-link">插件技术基础学习</a></li><li><a href="/md/language/python/2021-03-22-base-==&amp;is.html" class="sidebar-link">==和is的区别解析</a></li><li><a href="/md/language/python/2021-03-25-base-signal-1.html" class="sidebar-link">Signal信号量使用详解</a></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html" aria-current="page" class="active sidebar-link">GIL基础学习1</a></li><li><a href="/md/language/python/2021-04-15-build-source-code-env-mac.html" class="sidebar-link">Mac搭建Python源码阅读环境</a></li><li><a href="/md/language/python/2021-03-05-base-gil-2.html" class="sidebar-link">GIL基础学习2(可视化)</a></li></ul></section></li></ul> </aside> <div><main class="page"> <div class="theme-default-content content__default"><blockquote><p>全局解释器锁GIL(Global Interpreter Lock)</p></blockquote> <h2 id="一、gil理解"><a href="#一、gil理解" class="header-anchor">#</a> 一、GIL理解</h2> <ul><li>GIL指定同时只允许一个线程控制Python解释器。</li> <li>GIL是CPU限制型和多线程代码中的性能瓶颈。</li> <li>GIL导致Python多线程属于伪并发的多线程。</li> <li>GIL只在CPython解释器上存在。</li></ul> <h3 id="gil的影响"><a href="#gil的影响" class="header-anchor">#</a> GIL的影响</h3> <ul><li>Python中同一时刻有且只有一个线程会执行；</li> <li>Python中的多个线程由于GIL锁的存在无法利用多核CPU；</li> <li>Python中的多线程不适合计算机密集型的程序；</li> <li>问题：GIL的存在使程序无法充分利用CPU进行运算，那么它真的一无是处么？
+<ul><li>计算密集型程序【比如计算圆周率、对视频进行高清解码等等，全靠CPU的运算能力】</li> <li>IO密集型程序【比如网络数据的收发，大文件的读写，这样的程序称为IO密集型程序】</li></ul></li></ul> <h3 id="为什么选择gil作为解决方案呢"><a href="#为什么选择gil作为解决方案呢" class="header-anchor">#</a> 为什么选择GIL作为解决方案呢？</h3> <ul><li>内核CPython会大量使用C语言库，但大部分C语言库都不是原生线程安全的(线程安全会降低性能和增加复杂度)</li> <li>早期实用解决方案，解决CPython开发人员在Python生命中早期面临的一个线程安全难题。</li> <li>后期由于Python内核基于C语言编写，所以开发人员为Python需要的功能编写许多C库扩展。为了防止不一致的更改，继续延用GIL</li></ul> <h3 id="为什么还没有删除gil"><a href="#为什么还没有删除gil" class="header-anchor">#</a> 为什么还没有删除GIL？</h3> <ul><li>Python的开发人员对此有很多抱怨，但是Python这样流行的语言删除GIL，向下兼容代价太大了</li> <li>Py3社区也尝试过执行此操作，不过导致性能下降又加上了（破坏了现有的C扩展，这些扩展依赖于GIL，需要程序维护多线程，相对性能下降）</li> <li>Py3社区GIL重大改进：
+<ul><li>计算密集和I/O密集共存的程序中，GIL致使I/O密集的线程饿死，因为没有机会从CPU绑定的线程中获取GIL。所以Python内置了一种机制，强制线程在固定间隔后释放GIL，并且如果没有其他人获得GIL，则相同的线程才可以继续使用它。</li> <li>这种机制的依然存在问题大多数情况下，CPU密集型线程会在其他线程获取GIL之前重新获取GIL。具体如下<a href="https://juejin.cn/post/6932355242721804296" target="_blank" rel="noopener noreferrer">可视化<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</li> <li>Python3.2中社区添加了一种机制，可以在其他线程有机会运行之前不允许当前线程重新获取GIL。</li></ul></li></ul> <h2 id="二、gil原理"><a href="#二、gil原理" class="header-anchor">#</a> 二、GIL原理</h2> <h3 id="gil如何工作"><a href="#gil如何工作" class="header-anchor">#</a> GIL如何工作</h3> <ul><li>下图就是一个GIL在Python程序中的工作示例。</li> <li>其中，线程1、2、3轮流执行，每一个线程在执行是，都会锁住GIL，以阻止别的线程执行；</li> <li>同样的，每一个线程执行一段后，会释放GIL，以允许别的线程开始利用资源。</li></ul> <p><img alt="img" data-src="https://lisanshiyi.com/assets/language/python/GIL_1.png" loading="lazy" class="lazy"></p> <ul><li>由于古老GIL机制，如果线程2需要在CPU2上执行，它需要先等待在CPU1上执行的线程1释放GIL（记住：GIL是全局的）</li> <li>如果线程1是因为 i/o 阻塞让出的GIL，那么线程2必定拿到GIL。但如果线程1是因为timer ticks计数满100ticks(大概对应了1000个bytecodes)让出GIL，那么这个时候线程1和线程2公平竞争。</li> <li>但要命的是，在Python 2.x, 线程1不会动态的调整自身的优先级，所以很大概率下次被选中执行的还是线程1，在很多个这样的选举周期内，线程2只能安静的看着线程1拿着GIL在CPU 1上欢快的执行。</li> <li>极端一点的情况下，比如线程1使用了while True在CPU1上执行，那就真是“一核有难，八核围观”了，如下图所示：</li></ul> <p><img alt="img" data-src="https://lisanshiyi.com/assets/language/python/GIL_2.png" loading="lazy" class="lazy"></p> <ul><li>整体来说，每一个Python的线程都是类似这样循环的封装，我们可以看看下面的代码</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>for(;;){
+    if(--ticker &lt; 0)
+    /*Give another thread a chance*/
+    PyThread_release_lock(interpreter_lock);
+ 
+    /*Other threads may run now*/
+ 
+    PyThread_acquire_lock(interpreter_lock,1);
+}
+ 
+bytecode = *next_instr++
+switch (bytecode){
+    /*execute the next instruction...*/
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br></div></div><ul><li>从上面的代码可以看出来，每个Python线程都会先检查ticker计数。只有ticker大于0的时候，线程才会去执行自己的bytecode。</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>python -c 'import sys;print sys.getcheckinterval()'
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><h3 id="gil结构体"><a href="#gil结构体" class="header-anchor">#</a> GIL结构体</h3> <ul><li>以下结构体就是GIL的定义</li> <li>locked用来指示是否上锁, 1表示已有线程上锁, 0表示锁空闲，</li> <li>lock_released和mutex来同步对locked的访问。</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>typedef struct {
+    char 	locked; /* 0=unlocked, 1=locked */
+    /* a &lt;cond, mutex&gt; pair to handle an acquire of a locked lock */
+    pthread_cond_t 	lock_released;
+    pthread_mutex_t 	mut;
+} pthread_lock;
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br></div></div><h3 id="gil的获取与释放"><a href="#gil的获取与释放" class="header-anchor">#</a> GIL的获取与释放</h3> <ul><li>线程对GIL的操作本质上就是通过修改locked状态变量来获取或释放GIL。所以主要的操作有两个:</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>PyThread_acquire_lock()
+PyThread_release_lock()
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><ul><li>以下是获取GIL的实现，可以看到，线程在其他线程已经获取GIL的时候，需要通过pthread_cond_wait()等待获取GIL的线程释放GIL。</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>/*获取GIL*/
+int  PyThread_acquire_lock(PyThread_type_lock lock, int waitflag) 
+{
+    int success;
+    pthread_lock *thelock = (pthread_lock *)lock;
+    int status, error = 0;
+    status = pthread_mutex_lock( &amp;thelock-&gt;mut ); /*先获取mutex, 获得操作locked变量的权限*/
+    success = thelock-&gt;locked == 0;
+    if ( !success &amp;&amp; waitflag ) { /*已有线程上锁,*/
+        while ( thelock-&gt;locked ) {
+            /*通过pthread_cond_wait等待持有锁的线程释放锁*/
+            status = pthread_cond_wait(&amp;thelock-&gt;lock_released,
+                                       &amp;thelock-&gt;mut);
+        }
+        success = 1;
+    }
+    if (success) thelock-&gt;locked = 1; /*当前线程上锁*/
+    status = pthread_mutex_unlock( &amp;thelock-&gt;mut ); /*解锁mutex, 让其他线程有机会进入临界区等待上锁*/
+    if (error) success = 0;
+    return success; 
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><ul><li>以下是释放GIL的过程,特别注意最后一步, 通过pthread_cond_signal()通知其他等待(pthread_cond_wait())释放GIL的线程,让这些线程可以获取GIL。</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>/*释放GIL*/
+void PyThread_release_lock(PyThread_type_lock lock)
+{
+    pthread_lock *thelock = (pthread_lock *)lock;
+    int status, error = 0;
+    status = pthread_mutex_lock( &amp;thelock-&gt;mut ); /*通过mutex获取操作locked变量的权限*/
+    thelock-&gt;locked = 0; /*实际的释放GIL的操作, 就是将locked置为0*/
+    status = pthread_mutex_unlock( &amp;thelock-&gt;mut ); /*解锁mutex*/
+    status = pthread_cond_signal( &amp;thelock-&gt;lock_released ); /*这步非常关键, 通知其他线程当前线程已经释放GIL*/
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><h2 id="三、gil调优"><a href="#三、gil调优" class="header-anchor">#</a> 三、GIL调优</h2> <ul><li>给线程加锁，会对python多线程的效率有不小的影响，使用多线程进行CPU密集型的操作，会存在频繁的上下文切换，效率低下</li></ul> <h3 id="不要用c语言版本的python解释器"><a href="#不要用c语言版本的python解释器" class="header-anchor">#</a> 不要用C语言版本的Python解释器</h3> <ul><li>Python有多个解释器实现，包括C，Java，C＃和Python编写的CPython，Jython，IronPython和PyPy是最受欢迎的，GIL仅存在于CPython的原始Python实现中</li></ul> <h3 id="让子线程运行其他语言代码"><a href="#让子线程运行其他语言代码" class="header-anchor">#</a> 让子线程运行其他语言代码</h3> <ul><li>主线程运行Python代码，子线程运行C语言代码(C语言的动态库)</li> <li>CPython的优势就是与C模块的结合，因此可以借助Ctypes调用C的动态库来实现将计算转移，C动态库没有GIL可以实现对多核的利用。</li> <li>深度算法 rcnn</li></ul> <h3 id="多进程代替多线程"><a href="#多进程代替多线程" class="header-anchor">#</a> 多进程代替多线程</h3> <ul><li>多进程可以利用多核CPU</li> <li>通过使用多进程，我们并行运行了一定数量的python解释器，每一个进程都有私有的空间，有自己的GIL，并且每一个都串行运行，所以没有GIL之间的竞争</li> <li>因此GIL不会成为问题。Python有一个multiprocessing模块，可以让我们像这样轻松地创建流程：</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>import time
+from multiprocessing import Pool
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+
+pool = Pool(processes=2)
+start = time.clock()
+r1 = pool.apply_async(countdown, [COUNT//2])
+r2 = pool.apply_async(countdown, [COUNT//2])
+pool.close()
+pool.join()
+print('Time used:', time.clock() - start)
+# ('Time used:', 0.0017779999999998353)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><ul><li>时间没有下降到我们上面看到的一半，因为进程管理有自己的开销。多个进程比多个线程重，因此请记住，这可能会成为一个扩展瓶颈。</li></ul> <h3 id="协程"><a href="#协程" class="header-anchor">#</a> 协程</h3> <ul><li>在Python3.4之前，官方没有对协程的支持，存在一些三方库的实现，比如gevent和Tornado</li> <li>3.4之后就内置了asyncio标准库，官方真正实现了协程这一特性。</li> <li>在IO密集型的情况下，使用协程能提高最高效率</li> <li>注意；协程不是任何单位，只是一个程序员YY出来的东西</li> <li>协程的目的：手动实现“遇到IO切换 + 保存状态” 去欺骗操作系统，让操作系统误以为没有IO操作，将CPU的执行权限给你，从而单线程下实现并发</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>import time
+#遇到IO切换（gevent） + 保存状态
+from gevent import monkey  #猴子补丁
+monkey.patch_all()  #监听所有的任务是否有IO操作
+from gevent import spawn  #spawn(任务)
+from gevent import joinall
+
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+
+sp1 = spawn(countdown, COUNT//2)
+sp2 = spawn(countdown, COUNT//2)
+
+# sp1.start()
+# sp2.start()
+# sp1.join()
+# sp2.join()
+joinall([sp1, sp2])  #等同于上面六步
+
+print('Time used:', time.clock() - start)
+# ('Time used:', 0.40398999999999985)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><h3 id="问题"><a href="#问题" class="header-anchor">#</a> 问题</h3> <ul><li>多进程利用多核优势，怎样发挥单核优势呢</li> <li>Python社区中一些人从CPython中删除GIL(eg：<a href="https://pythoncapi.readthedocs.io/gilectomy.html" target="_blank" rel="noopener noreferrer">Gilectomy<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>)</li></ul> <h2 id="四、速度测试"><a href="#四、速度测试" class="header-anchor">#</a> 四、速度测试</h2> <ul><li>测评结果</li></ul> <table><thead><tr><th>测试方式</th> <th>测试时间</th></tr></thead> <tbody><tr><td>单线程</td> <td>0.392953</td></tr> <tr><td>多线程</td> <td>0.910045</td></tr> <tr><td>多进程</td> <td>0.0017779999999998353</td></tr> <tr><td>协程</td> <td>0.40398999999999985</td></tr></tbody></table> <ul><li>测试代码：</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code># -*- coding: utf-8 -*-
+import time
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+countdown(COUNT)
+print(&quot;Time used:&quot;,(time.clock() - start))
+# ('Time used:', 0.392953)
+
+import time
+from threading import Thread
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+t1 = Thread(target=countdown, args=[COUNT // 2])
+t2 = Thread(target=countdown, args=[COUNT // 2])
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+print(&quot;Time used:&quot;,(time.clock() - start))
+# ('Time used:', 0.910045)
+
+import time
+from multiprocessing import Pool
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+pool = Pool(processes=2)
+start = time.clock()
+r1 = pool.apply_async(countdown, [COUNT//2])
+r2 = pool.apply_async(countdown, [COUNT//2])
+pool.close()
+pool.join()
+print('Time used:', time.clock() - start)
+# ('Time used:', 0.0017779999999998353)
+
+import time
+#遇到IO切换（gevent） + 保存状态
+from gevent import monkey  #猴子补丁
+monkey.patch_all()  #监听所有的任务是否有IO操作
+from gevent import spawn  #spawn(任务)
+from gevent import joinall
+COUNT = 10000000
+start = time.clock()
+def countdown(n):
+    while n &gt; 0:
+        n -= 1
+sp1 = spawn(countdown, COUNT//2)
+sp2 = spawn(countdown, COUNT//2)
+# sp1.start()
+# sp2.start()
+# sp1.join()
+# sp2.join()
+joinall([sp1, sp2])  #等同于上面六步
+print('Time used:', time.clock() - start)
+# ('Time used:', 0.40398999999999985)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br></div></div><h2 id="五、扩展"><a href="#五、扩展" class="header-anchor">#</a> 五、扩展</h2> <h3 id="什么时候会释放gil锁"><a href="#什么时候会释放gil锁" class="header-anchor">#</a> 什么时候会释放GIL锁</h3> <div class="language- extra-class"><pre><code>- 遇到像i/o操作，这种会有时间空闲情况 造成cpu闲置的情况会释放GIL
+- 会有一个专门ticks进行计数，一旦ticks数值达到100这个时候释放GIL锁，线程之间开始竞争GIL锁(说明:ticks这个数值可以进行设置来延长或者缩减获得GIL锁的线程使用cpu的时间)
+</code></pre></div><h3 id="互斥锁和gil锁的关系"><a href="#互斥锁和gil锁的关系" class="header-anchor">#</a> 互斥锁和GIL锁的关系</h3> <ul><li>GIL锁
+<ul><li>GIL是Python解释层面的锁，解决解释器中多个线程的竞争资源问题</li> <li>保证同一时刻只有一个线程能使用到cpu</li> <li>语言层面本身维护锁机制用来保证线程安全</li></ul></li> <li>互斥锁
+<ul><li>线程互斥锁是Python代码层面的锁，解决Python程序中多线程共享资源的问题</li> <li>多线程时，保证修改共享数据时有序的修改</li> <li>不会产生数据修改混乱，线程锁，程序员需要自行加／解锁来保证线程安全;</li></ul></li> <li>案例：假设只有一个进程，这个进程中有两个线程 Thread1，Thread2，要修改共享的数据date，并且有互斥锁:</li></ul> <div class="language- line-numbers-mode"><pre class="language-text"><code>	1. 多线程运行，假设Thread1获得GIL可以使用cpu，这时Thread1获得互斥锁lock，Thread1可以改date数据(但并没有开始修改数据);
+	2. Thread1线程在修改date数据前发生了i/o操作或者ticks计数满100((注意就是没有运行到修改data数据),这个时候 Thread1 让出了TIL，GIL锁可以被竞争);
+	3. Thread1和Thread2开始竞争GIL(注意:如果Thread1是因为i/o阻塞让出的GIL，Thread2必定拿到GIL,如果Thread1是因为ticks计数满100让出GIL这个时候Thread1和Thread2公平竞争);
+	4. 假设Thread2正好获得了GIL, 运行代码去修改共享数据date，由于Thread1有互斥锁lock，所以Thread2无法更改共享数据date,这时Thread2让出GIL锁, GIL锁再次发生竞争;
+	5. 假设Thread1又抢到GIL，由于其有互斥锁Lock所以其可以继续修改共享数据data,当Thread1修改完数据释放互斥锁lock，Thread2在获得GIL与lock后才可对data进行修改
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h2 id="参考"><a href="#参考" class="header-anchor">#</a> 参考</h2> <ul><li>C互斥锁、信号量：https://www.cnblogs.com/luzhiyuan/p/4380793.html</li> <li>理解GIL：https://www.youtube.com/watch?v=Obt-vMVdM8s&amp;feature=youtu.be</li></ul></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/liyaodev/lisanshiyi/edit/master/docs/md/language/python/2021-03-03-base-gil-1.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">2023/1/4</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+        ←
+        <a href="/md/language/python/2021-03-25-base-signal-1.html" class="prev">
+          Signal信号量使用详解
+        </a></span> <span class="next"><a href="/md/language/python/2021-04-15-build-source-code-env-mac.html">
+          Mac搭建Python源码阅读环境
+        </a>
+        →
+      </span></p></div> </main></div> <aside class="page-sidebar"> <div class="page-side-toolbar"><div class="option-box-toc-fixed"><div class="toc-container-sidebar"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:650px"><div style="font-weight:bold;text-align:center;">GIL基础学习1</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/language/python/2021-03-03-base-gil-1.html#一、gil理解" class="toc-sidebar-link">一、GIL理解</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil的影响" class="toc-sidebar-link">GIL的影响</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#为什么选择gil作为解决方案呢" class="toc-sidebar-link">为什么选择GIL作为解决方案呢？</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#为什么还没有删除gil" class="toc-sidebar-link">为什么还没有删除GIL？</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#二、gil原理" class="toc-sidebar-link">二、GIL原理</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil如何工作" class="toc-sidebar-link">GIL如何工作</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil结构体" class="toc-sidebar-link">GIL结构体</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil的获取与释放" class="toc-sidebar-link">GIL的获取与释放</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#三、gil调优" class="toc-sidebar-link">三、GIL调优</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#不要用c语言版本的python解释器" class="toc-sidebar-link">不要用C语言版本的Python解释器</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#让子线程运行其他语言代码" class="toc-sidebar-link">让子线程运行其他语言代码</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#多进程代替多线程" class="toc-sidebar-link">多进程代替多线程</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#协程" class="toc-sidebar-link">协程</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#问题" class="toc-sidebar-link">问题</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#四、速度测试" class="toc-sidebar-link">四、速度测试</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#五、扩展" class="toc-sidebar-link">五、扩展</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#什么时候会释放gil锁" class="toc-sidebar-link">什么时候会释放GIL锁</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#互斥锁和gil锁的关系" class="toc-sidebar-link">互斥锁和GIL锁的关系</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#参考" class="toc-sidebar-link">参考</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box-toc-over"><img src="/images/system/toc.png" class="nozoom"> <span class="show-txt">目录</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="max-height:550px"><div style="font-weight:bold;text-align:center;">GIL基础学习1</div> <hr> <div class="toc-box"><ul class="toc-sidebar-links"><li><a href="/md/language/python/2021-03-03-base-gil-1.html#一、gil理解" class="toc-sidebar-link">一、GIL理解</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil的影响" class="toc-sidebar-link">GIL的影响</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#为什么选择gil作为解决方案呢" class="toc-sidebar-link">为什么选择GIL作为解决方案呢？</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#为什么还没有删除gil" class="toc-sidebar-link">为什么还没有删除GIL？</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#二、gil原理" class="toc-sidebar-link">二、GIL原理</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil如何工作" class="toc-sidebar-link">GIL如何工作</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil结构体" class="toc-sidebar-link">GIL结构体</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#gil的获取与释放" class="toc-sidebar-link">GIL的获取与释放</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#三、gil调优" class="toc-sidebar-link">三、GIL调优</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#不要用c语言版本的python解释器" class="toc-sidebar-link">不要用C语言版本的Python解释器</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#让子线程运行其他语言代码" class="toc-sidebar-link">让子线程运行其他语言代码</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#多进程代替多线程" class="toc-sidebar-link">多进程代替多线程</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#协程" class="toc-sidebar-link">协程</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#问题" class="toc-sidebar-link">问题</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#四、速度测试" class="toc-sidebar-link">四、速度测试</a><ul class="toc-sidebar-sub-headers"></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#五、扩展" class="toc-sidebar-link">五、扩展</a><ul class="toc-sidebar-sub-headers"><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#什么时候会释放gil锁" class="toc-sidebar-link">什么时候会释放GIL锁</a></li><li class="toc-sidebar-sub-header"><a href="/md/language/python/2021-03-03-base-gil-1.html#互斥锁和gil锁的关系" class="toc-sidebar-link">互斥锁和GIL锁的关系</a></li></ul></li><li><a href="/md/language/python/2021-03-03-base-gil-1.html#参考" class="toc-sidebar-link">参考</a><ul class="toc-sidebar-sub-headers"></ul></li></ul></div></div></div></div></div> <div class="option-box"><img src="/images/system/wechat.png" class="nozoom"> <span class="show-txt">手机看</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.9rem">微信扫一扫</span> <img height="180px" src="https://api.qrserver.com/v1/create-qr-code/?data=https://lisanshiyi.com/md/language/python/2021-03-03-base-gil-1.html" style="margin:10px;">
+              支持<b>手机看</b>或分享至<b>朋友圈</b></div></div></div></div> <div class="option-box"><img src="/images/system/toggle.png" width="30px" class="nozoom"> <span class="show-txt">左栏</span></div> <div class="option-box"><img src="/images/system/heart-1.png" width="25px" class="nozoom"> <span class="show-txt">赞赏我</span> <div class="toc-container"><div class="pos-box"><div class="icon-arrow"></div> <div class="scroll-box" style="text-align:center"><span style="font-size:0.8rem;font-weight:bold;">鼓励/支持/赞赏我</span> <img height="180px" src="/images/personal/likecode.jpeg" style="margin:5px;"></div></div></div></div> <div title="Signal信号量使用详解" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/language/python/2021-03-25-base-signal-1.html"><img src="/images/system/pre2.png" width="30px" class="nozoom"> <span class="show-txt">上一篇</span></a></div> <div title="Mac搭建Python源码阅读环境" class="option-box" style="padding-left:2px;text-align:center;"><a href="/md/language/python/2021-04-15-build-source-code-env-mac.html"><img src="/images/system/next2.png" width="30px" class="nozoom"> <span class="show-txt">下一篇</span></a></div></div>  <div class="page-side-sitemap"><div class="option-box"><img src="/images/system/sitemap.png" class="nozoom img"> <span class="show-txt">站点图</span> <div class="sitemap-container"><h4>站点导航图
+            <a href="/md/about/me/platform/default.html" class="sitemap-top-link"> 关于我</a> <a href="/md/about/platform/default.html" class="sitemap-top-link"> 关于平台</a></h4> <table class="sitemap-table"><tr><td nowrap="nowrap"><div class="sitemap-col-group">常用搜索</div></td> <td><div class="sitemap-col-item"><a href="http://www.baidu.com/" target="_blank" title="百度">  
+          百度
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.google.com/" target="_blank" title="Google">  
+          Google
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.bing.com/" target="_blank" title="Bing">  
+          Bing
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://github.com" target="_blank" title="Github">  
+          Github
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://gitee.com" target="_blank" title="Gitee">  
+          Gitee
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.programcreek.com/java-api-examples/index.php" target="_blank" title="搜代码">  
+          搜代码
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr><tr><td nowrap="nowrap"><div class="sitemap-col-group">技术社区</div></td> <td><div class="sitemap-col-item"><a href="http://www.csdn.net/" target="_blank" title="CDSN">  
+          CDSN
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="http://www.cnblogs.com/" target="_blank" title="博客园">  
+          博客园
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.oschina.net" target="_blank" title="OSChina">  
+          OSChina
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://segmentfault.com/" target="_blank" title="思否">  
+          思否
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://juejin.im" target="_blank" title="掘金">  
+          掘金
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.linuxidc.com/" target="_blank" title="Linux公社">  
+          Linux公社
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://www.ibm.com/developerworks/cn/" target="_blank" title="IBM 开发者">  
+          IBM 开发者
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div><div class="sitemap-col-item"><a href="https://stackoverflow.com" target="_blank" title="StackOverflow">  
+          StackOverflow
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr><tr><td nowrap="nowrap"><div class="sitemap-col-group">知识星球</div></td> <td><div class="sitemap-col-item"><a href="https://t.zsxq.com/05IMnEQFY" target="_blank" title="编程清单">  
+          编程清单
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div></td> <!----></tr></table></div></div></div> <!----> </aside></div><div class="global-ui"><div class="read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="read-more-btn" target="_self" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">阅读全文</a> <div id="btw-modal-wrap" style="display: none;"><div id="btw-mask" style="position: fixed; top: 0px; right: 0px; bottom: 0px; left: 0px; opacity: 0.7; z-index: 999; background: rgb(0, 0, 0);"></div> <div id="btw-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; text-align: center; font-size: 13px; background: rgb(255, 255, 255); border-radius: 10px; z-index: 9999; font-family: PingFangSC-Regular, sans-serif;"><span id="btw-modal-close-btn" style="position: absolute; top: 5px; right: 15px; line-height: 34px; font-size: 34px; cursor: pointer; opacity: 0.2; z-index: 9999; color: rgb(0, 0, 0); background: none; border: none; outline: none;">×</span> <p id="btw-modal-header" style="margin-top: 40px; line-height: 1.8; font-size: 13px;">
+                扫码或搜索：<span style="color: #E9405A; font-weight: bold;">李三十一</span> <br>发送：<span id="site-token" class="token" style="color: #e9415a; font-weight: bold; font-size: 17px; margin-bottom: 45px;">290992</span> <br>即可<span style="color: #e9415a; font-weight: bold;">立即永久</span>解锁本站全部文章</p> <img src="/images/personal/subcode.png" style="width: 180px; margin-top: 10px; margin-bottom: 30px; border: 8px solid rgb(230, 230, 230);"></div></div></div><div class="pay-read-more-wrap" style="display:none;position:absolute;bottom:0px;z-index:9999;width:100%;margin-top:-100px;font-family:PingFangSC-Regular, sans-serif;"><div id="pay-read-more-mask" style="position: relative; height: 200px; background: -webkit-gradient(linear, 0 0%, 0 100%, from(rgba(255, 255, 255, 0)), to(rgb(255, 255, 255)));"></div> <a id="pay-read-more-btn" target="_blank" style="position: absolute; left: 50%; top: 70%; bottom: 30px; transform: translate(-50%, -50%); width: 160px; height: 36px; line-height: 36px; font-size: 15px; text-align: center; border: 1px solid rgb(222, 104, 109); color: rgb(222, 104, 109); background: rgb(255, 255, 255); cursor: pointer; border-radius: 6px;">付费阅读</a></div></div></div>
+    <script src="/assets/js/cg-styles.js?v=1672811081832" defer></script><script src="/assets/js/cg-3.js?v=1672811081832" defer></script><script src="/assets/js/cg-4.js?v=1672811081832" defer></script><script src="/assets/js/cg-39.js?v=1672811081832" defer></script><script src="/assets/js/cg-5.js?v=1672811081832" defer></script><script src="/assets/js/cg-6.js?v=1672811081832" defer></script><script src="/assets/js/cg-app.js?v=1672811081832" defer></script>
+  </body>
+</html>

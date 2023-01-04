@@ -1,0 +1,2 @@
+Sitemap: https://lisanshiyi.com/sitemap.xml
+User-agent: *
